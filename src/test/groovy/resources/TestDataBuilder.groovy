@@ -2,7 +2,7 @@ package resources
 
 class TestDataBuilder {
 
-    /** <--- userToDo builder method ---> */
+    /** <--- userToDo data builder ---> */
     static String userToDo(int userId, String title, boolean completed) {
         return """{
             "userId": $userId,
@@ -11,7 +11,7 @@ class TestDataBuilder {
         }"""
     }
 
-    /** <--- user builder method ---> */
+    /** <--- user data builder ---> */
     static String user(String name, String userName, String email) {
         return """{
             "name": "$name",
@@ -37,7 +37,7 @@ class TestDataBuilder {
         }"""
     }
 
-    /** <--- photo builder method ---> */
+    /** <--- photo data builder ---> */
     static String photo(int albumId, int id, String title, String url, String thumbnailUrl) {
         return """{
             "albumId": $albumId,
@@ -48,7 +48,7 @@ class TestDataBuilder {
         }"""
     }
 
-    /** <--- album builder method ---> */
+    /** <--- album data builder ---> */
     static String album(int userId, int id, String title) {
         return """{
             "userId": $userId,
@@ -57,7 +57,7 @@ class TestDataBuilder {
         }"""
     }
 
-    /** <--- comment builder method ---> */
+    /** <--- comment data builder ---> */
     static String comment(int postId, int id, String name, String email, String body) {
         return """{
             "postId": $postId,
@@ -68,7 +68,7 @@ class TestDataBuilder {
         }"""
     }
 
-    /** <--- post builder method ---> */
+    /** <--- post data builder ---> */
     static String post(int userId, int id, String title, String body) {
         return """{
             "userId": $userId,
