@@ -1,133 +1,202 @@
 package requests
 
-import io.restassured.response.Response
 import org.junit.jupiter.api.Test
-import resources.HTTPClient
-import resources.TestDataBuilder
+import io.restassured.response.Response
+
+import resources.UserClient
+import resources.ToDoClient
+import resources.PostClient
+import resources.CommentClient
+import resources.AlbumClient
+import resources.PhotoClient
+
+import resources.UserAssertions
+import resources.ToDoAssertions
+import resources.PostAssertions
+import resources.CommentAssertions
+import resources.AlbumAssertions
+import resources.PhotoAssertions
 
 class UserTests {
+    UserClient userClient = new UserClient()
+    ToDoClient toDoClient = new ToDoClient()
+    PostClient postClient = new PostClient()
+    CommentClient commentClient = new CommentClient()
+    AlbumClient albumClient = new AlbumClient()
+    PhotoClient photoClient = new PhotoClient()
 
     @Test
     void test_createUserAndEntities() {
-        // Step 1: Create a user
-        String userBody = TestDataBuilder.user("Test User", "testuser", "testuser@example.com")
-        // send a POST request to create a user
-        Response userResponse = HTTPClient.post("/users", userBody)
-        // assert the response status code is 201
-        assert userResponse.statusCode() == 201
-        // assert the user details in the response
-        assert userResponse.jsonPath().getString("name") == "Test User"
-        assert userResponse.jsonPath().getString("username") == "testuser"
-        assert userResponse.jsonPath().getString("email") == "testuser@example.com"
-        // get the user ID from the response
+        /** STEP 1 */
+        /** create a user */
+        Response userResponse = userClient.createUser(
+                "Test User",
+                "test_user",
+                "testuser@example.com"
+        )
+        /** assert successful user creation */
+        UserAssertions.assertUserSuccessfulCreation(
+                userResponse,
+                "Test User",
+                "test_user",
+                "testuser@example.com"
+        )
+        /** store the userId from the response in a variable */
         int userId = userResponse.jsonPath().getInt("id")
-        // some logs for debugging
-        println "Created user with ID: $userId"
-        userResponse.prettyPrint()
 
-        // Step 2: Create a post for the user
-        String postBody = TestDataBuilder.post(userId, 1, "Test Post Title", "This is the body of the test post.")
-        // send a POST request to create a post for the previously created user
-        Response postResponse = HTTPClient.post("/posts", postBody)
-        // assert the response status code is 201
-        assert postResponse.statusCode() == 201
-        // assert the post details in the response
-        assert postResponse.jsonPath().getInt("userId") == userId
-        assert postResponse.jsonPath().getString("title") == "Test Post Title"
-        assert postResponse.jsonPath().getString("body") == "This is the body of the test post."
-        // get the post ID from the response
+        /** STEP 2 */
+        /** create a post for the user from step 1 */
+        Response postResponse = postClient.createPost(
+                userId,
+                1,
+                "Test Post Title",
+                "This is the body of the test post."
+        )
+        /** assert successful post creation */
+        PostAssertions.assertPostSuccessfulCreation(
+                postResponse,
+                userId,
+                "Test Post Title",
+                "This is the body of the test post."
+        )
+        /** store the postId from the response in a variable */
         int postId = postResponse.jsonPath().getInt("id")
-        // some logs for debugging
-        println "Created post with ID: $postId"
-        postResponse.prettyPrint()
 
-        // Step 3: Create a comment for the post
-        String commentBody = TestDataBuilder.comment(postId, 1, "Test Commenter", "commenter@example.com", "This is a test comment.")
-        // send a POST request to create a comment on the previously created post
-        Response commentResponse = HTTPClient.post("/comments", commentBody)
-        // assert the response status code is 201
-        assert commentResponse.statusCode() == 201
-        // assert the comment details in the response
-        assert commentResponse.jsonPath().getInt("postId") == postId
-        assert commentResponse.jsonPath().getString("name") == "Test Commenter"
-        assert commentResponse.jsonPath().getString("email") == "commenter@example.com"
-        assert commentResponse.jsonPath().getString("body") == "This is a test comment."
-        // some logs for debugging
-        println "Created comment on post ID: $postId"
-        commentResponse.prettyPrint()
+        /** STEP 3 */
+        /** create a comment for the user's post from step 2 */
+        Response commentResponse = commentClient.createComment(
+                postId,
+                1,
+                "Test Commenter",
+                "commenter@example.com",
+                "This is a test comment."
+        )
+        /** assert successful comment creation */
+        CommentAssertions.assertCommentSuccessfulCreation(
+                commentResponse,
+                postId,
+                "Test Commenter",
+                "commenter@example.com",
+                "This is a test comment."
+        )
 
-        // Step 4: Create a to-do for the user
-        String toDoBody = TestDataBuilder.userToDo(userId, "Test To-Do", false)
-        // send a POST request to create a to-do for the previously created user
-        Response toDoResponse = HTTPClient.post("/todos", toDoBody)
-        // assert the response status code is 201
-        assert toDoResponse.statusCode() == 201
-        // assert the to-do details in the response
-        assert toDoResponse.jsonPath().getInt("userId") == userId
-        assert toDoResponse.jsonPath().getString("title") == "Test To-Do"
-        assert !toDoResponse.jsonPath().getBoolean("completed")
-        // some logs for debugging
-        println "Created to-do for user ID: $userId"
-        toDoResponse.prettyPrint()
+        /** STEP 4 */
+        /** create a to-do for the user from step 1 */
+        Response toDoResponse = toDoClient.createToDo(
+                userId,
+                "Test To-Do",
+                false
+        )
+        /** assert successful to-do creation */
+        ToDoAssertions.assertToDoSuccessfulCreation(
+                toDoResponse,
+                userId,
+                "Test To-Do",
+                false
+        )
 
-        // Step 5: Create an album for the user
-        String albumBody = TestDataBuilder.album(userId, 1, "Test Album Title")
-        // send a POST request to create an album for the previously created user
-        Response albumResponse = HTTPClient.post("/albums", albumBody)
-        // assert the response status code is 201
-        assert albumResponse.statusCode() == 201
-        // assert the album details in the response
-        assert albumResponse.jsonPath().getInt("userId") == userId
-        assert albumResponse.jsonPath().getString("title") == "Test Album Title"
-        // get the album ID from the response
+        /** STEP 5 */
+        /** create an album for the user from step 1 */
+        Response albumResponse = albumClient.createAlbum(
+                userId,
+                1,
+                "Test Album Title"
+        )
+        /** assert successful album creation */
+        AlbumAssertions.assertAlbumSuccessfulCreation(
+                albumResponse,
+                userId,
+                "Test Album Title"
+        )
+        /** store the albumId from the response in a variable */
         int albumId = albumResponse.jsonPath().getInt("id")
-        // some logs for debugging
-        println "Created album with ID: $albumId"
-        albumResponse.prettyPrint()
 
-        // Step 6: Create a photo in the album
-        String photoBody = TestDataBuilder.photo(albumId, 1, "Test Photo", "https://via.placeholder.com/600/92c952", "https://via.placeholder.com/150/92c952")
-        // send a POST request to create a photo in the previously created album
-        Response photoResponse = HTTPClient.post("/photos", photoBody)
-        // assert the response status code is 201
-        assert photoResponse.statusCode() == 201
-        // assert the photo details in the response
-        assert photoResponse.jsonPath().getInt("albumId") == albumId
-        assert photoResponse.jsonPath().getString("title") == "Test Photo"
-        assert photoResponse.jsonPath().getString("url") == "https://via.placeholder.com/600/92c952"
-        assert photoResponse.jsonPath().getString("thumbnailUrl") == "https://via.placeholder.com/150/92c952"
-        // some logs for debugging
-        println "Created photo in album ID: $albumId"
-        photoResponse.prettyPrint()
+        /** STEP 6 */
+        /** create a photo in the album from step 5 */
+        Response photoResponse = photoClient.createPhoto(
+                albumId,
+                1,
+                "Test Photo",
+                "https://via.placeholder.com/600/92c952",
+                "https://via.placeholder.com/150/92c952"
+        )
+        /** assert successful photo creation */
+        PhotoAssertions.assertPhotoSuccessfulCreation(
+                photoResponse,
+                albumId,
+                "Test Photo",
+                "https://via.placeholder.com/600/92c952",
+                "https://via.placeholder.com/150/92c952"
+        )
     }
 
     @Test
     void test_create100UsersAndToDosPerformance() {
-        // start time
+        /** initialize lists to store the users and their to-dos */
+        List<Map<String, Object>> users = new ArrayList<>()
+        List<Map<String, Object>> toDos = new ArrayList<>()
+        /** initialize a set to store the generated user IDs */
+        Set<Integer> userIds = new HashSet<>()
+
+        /** trigger the timer */
         long startTime = System.currentTimeMillis()
 
-        // loop to create 100 users and a to-do for each user
-        for (int i = 1; i <= 100; i++) {
-            // Create a user
-            String userBody = TestDataBuilder.user("User $i", "user$i", "user$i@example.com")
-            Response userResponse = HTTPClient.post("/users", userBody)
-            assert userResponse.statusCode() == 201
-            int userId = userResponse.jsonPath().getInt("id")
-            println "Created user with ID: $userId"
+        /** loop to create 100 users and a to-do for each of them */
+        for (int i = 0; i < 100; i++) {
+            /** generate a unique userId for each user */
+            int userId = i
 
-            // create a to-do for the created user
-            String toDoBody = TestDataBuilder.userToDo(userId, "To-Do for User $i", false)
-            Response toDoResponse = HTTPClient.post("/todos", toDoBody)
-            assert toDoResponse.statusCode() == 201
-            println "Created to-do for user ID: $userId"
+            while (userIds.contains(userId)) {
+                userId++
+            }
+            userIds.add(userId)
+
+            /** create the user and assert its creation */
+            Response userResponse = userClient.createUser(
+                    "User $i",
+                    "user$i",
+                    "user$i@example.com"
+            )
+            UserAssertions.assertUserSuccessfulCreation(
+                    userResponse,
+                    "User $i",
+                    "user$i",
+                    "user$i@example.com"
+            )
+            /** store the user data within its list reference */
+            users.add([
+                    id      : userId,
+                    name    : "User $i",
+                    username: "user$i",
+                    email   : "user$i@example.com"
+            ])
+
+            /** create a to-do for each created user and assert its creation */
+            Response toDoResponse = toDoClient.createToDo(
+                    userId,
+                    "To-Do for User $i",
+                    false
+            )
+            ToDoAssertions.assertToDoSuccessfulCreation(
+                    toDoResponse,
+                    userId,
+                    "To-Do for User $i",
+                    false
+            )
+            /** store the to-do data within its list reference */
+            toDos.add([
+                    userId   : userId,
+                    title    : "To-Do for User $i",
+                    completed: false
+            ])
         }
 
-        // end time
+        /** stop the timer */
         long endTime = System.currentTimeMillis()
 
-        // calculate the total time taken in seconds
+        /** calculate the total time taken and print it in seconds */
         long totalTime = endTime - startTime
-        // print the total time taken
+
         println "Total time taken to create 100 users and 100 to-dos: ${totalTime / 1000} seconds"
     }
 }

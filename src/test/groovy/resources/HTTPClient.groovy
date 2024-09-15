@@ -5,7 +5,6 @@ import io.restassured.http.ContentType
 import io.restassured.response.Response
 
 class HTTPClient {
-
     final static baseURI = 'https://jsonplaceholder.typicode.com'
 
     static {
@@ -22,5 +21,4 @@ class HTTPClient {
                 .when()
                 .post(resourceURL)
     }
-
 }

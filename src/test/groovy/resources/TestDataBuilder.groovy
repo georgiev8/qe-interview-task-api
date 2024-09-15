@@ -1,7 +1,6 @@
 package resources
 
 class TestDataBuilder {
-
     /** <--- userToDo data builder ---> */
     static String userToDo(int userId, String title, boolean completed) {
         return """{
