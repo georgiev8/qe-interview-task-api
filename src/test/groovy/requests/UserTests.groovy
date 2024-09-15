@@ -13,9 +13,9 @@ class UserTests {
     UserClient userClient = new UserClient()
     ToDoClient toDoClient = new ToDoClient()
     PostClient postClient = new PostClient()
-    CommentClient commentClient = new CommentClient()
     AlbumClient albumClient = new AlbumClient()
     PhotoClient photoClient = new PhotoClient()
+    CommentClient commentClient = new CommentClient()
 
     @Test
     void test_createUserAndEntities() {
