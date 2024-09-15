@@ -20,7 +20,7 @@ class UserTests {
     @Test
     void test_createUserAndItsRelatedEntities() {
         /** create a user and return its ID */
-        int userId = userClient.createUserAndReturnId("test User", "test_user", "testuser@example.com")
+        int userId = userClient.createUserAndReturnId("test user", "test_user", "testuser@example.com")
         /** create a post by using the userId's reference and return its ID */
         int postId = postClient.createPostAndReturnId(userId, "test post title", "this is the body of the test post.")
         /** create a comment by using the postId's reference */
