@@ -18,7 +18,7 @@ class UserTests {
     CommentClient commentClient = new CommentClient()
 
     @Test
-    void test_createUserAndEntities() {
+    void test_createUserAndItsRelatedEntities() {
         /** create a user and return its ID */
         int userId = userClient.createUserAndReturnId("test User", "test_user", "testuser@example.com")
         /** create a post by using the userId's reference and return its ID */
@@ -37,47 +37,19 @@ class UserTests {
     void test_validateUserCreationIntegrity() {
         /** initialize variable to randomly returns a test scenario */
         Random random = new Random()
-        int testScenario = random.nextInt(3) + 1
+        int testScenario = random.nextInt(2) + 1
 
         /** initialize a list to store the user data (simulated local DB) */
         List<Map<String, Object>> users = new ArrayList<>()
 
-        /** simulate scenarios based on the randomly generated number */
+        /**
+         * 3 scenarios total - 1. successful persistence, 2. failed persistence, 3. duplicated persistence
+         *
+         * within the previous test, we have already tested the successful persistence scenario,
+         * so we will only test the failed and duplicated persistence in this test.
+         */
         switch (testScenario) {
             case 1:
-                /** correct persistence */
-                /** create a test data object */
-                Map<String, Object> correctlyPersistedUserTestData = [
-                        name    : "correctly persisted user",
-                        username: "correctly_persisted_user",
-                        email   : "correctlyPersisted@example.com"
-                ]
-                /** create a user using the test data */
-                userClient.createUserAndAssertSuccess(
-                        (String) correctlyPersistedUserTestData.name,
-                        (String) correctlyPersistedUserTestData.username,
-                        (String) correctlyPersistedUserTestData.email
-                )
-                /** add the user to the local list (simulated local DB) */
-                Map<String, Object> user = [
-                        name    : (String) correctlyPersistedUserTestData.name,
-                        username: (String) correctlyPersistedUserTestData.username,
-                        email   : (String) correctlyPersistedUserTestData.email
-                ]
-
-                users.add(user)
-
-                /** assert that the user is present within the list (simulated local DB) */
-                assert users.size() == 1
-                assert users.get(0).name == (String) correctlyPersistedUserTestData.name
-                assert users.get(0).username == (String) correctlyPersistedUserTestData.username
-                assert users.get(0).email == (String) correctlyPersistedUserTestData.email
-
-                println "Scenario 1: Correct persistence"
-
-                break
-
-            case 2:
                 /** failed persistence */
                 /** create a test data */
                 Map<String, Object> notPersistedUserTestData = [
@@ -105,7 +77,7 @@ class UserTests {
 
                 break
 
-            case 3:
+            case 2:
                 /** duplicated persistence */
                 /** create a test data */
                 Map<String, Object> duplicatedUserTestData = [
