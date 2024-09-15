@@ -1,7 +1,6 @@
 package requests
 
 import org.junit.jupiter.api.Test
-import io.restassured.response.Response
 
 import resources.UserClient
 import resources.ToDoClient
@@ -9,13 +8,6 @@ import resources.PostClient
 import resources.CommentClient
 import resources.AlbumClient
 import resources.PhotoClient
-
-import resources.UserAssertions
-import resources.ToDoAssertions
-import resources.PostAssertions
-import resources.CommentAssertions
-import resources.AlbumAssertions
-import resources.PhotoAssertions
 
 class UserTests {
     UserClient userClient = new UserClient()
@@ -27,181 +19,79 @@ class UserTests {
 
     @Test
     void test_createUserAndEntities() {
-        /** STEP 1 */
-        /** create a user */
-        Response userResponse = userClient.createUser(
-                "Test User",
-                "test_user",
-                "testuser@example.com"
-        )
-        /** assert successful user creation */
-        UserAssertions.assertUserSuccessfulCreation(
-                userResponse,
-                "Test User",
-                "test_user",
-                "testuser@example.com"
-        )
-        /** store the userId from the response in a variable */
-        int userId = userResponse.jsonPath().getInt("id")
-
-        /** STEP 2 */
-        /** create a post for the user from step 1 */
-        Response postResponse = postClient.createPost(
-                userId,
-                1,
-                "Test Post Title",
-                "This is the body of the test post."
-        )
-        /** assert successful post creation */
-        PostAssertions.assertPostSuccessfulCreation(
-                postResponse,
-                userId,
-                "Test Post Title",
-                "This is the body of the test post."
-        )
-        /** store the postId from the response in a variable */
-        int postId = postResponse.jsonPath().getInt("id")
-
-        /** STEP 3 */
-        /** create a comment for the user's post from step 2 */
-        Response commentResponse = commentClient.createComment(
-                postId,
-                1,
-                "Test Commenter",
-                "commenter@example.com",
-                "This is a test comment."
-        )
-        /** assert successful comment creation */
-        CommentAssertions.assertCommentSuccessfulCreation(
-                commentResponse,
-                postId,
-                "Test Commenter",
-                "commenter@example.com",
-                "This is a test comment."
-        )
-
-        /** STEP 4 */
-        /** create a to-do for the user from step 1 */
-        Response toDoResponse = toDoClient.createToDo(
-                userId,
-                "Test To-Do",
-                false
-        )
-        /** assert successful to-do creation */
-        ToDoAssertions.assertToDoSuccessfulCreation(
-                toDoResponse,
-                userId,
-                "Test To-Do",
-                false
-        )
-
-        /** STEP 5 */
-        /** create an album for the user from step 1 */
-        Response albumResponse = albumClient.createAlbum(
-                userId,
-                1,
-                "Test Album Title"
-        )
-        /** assert successful album creation */
-        AlbumAssertions.assertAlbumSuccessfulCreation(
-                albumResponse,
-                userId,
-                "Test Album Title"
-        )
-        /** store the albumId from the response in a variable */
-        int albumId = albumResponse.jsonPath().getInt("id")
-
-        /** STEP 6 */
-        /** create a photo in the album from step 5 */
-        Response photoResponse = photoClient.createPhoto(
-                albumId,
-                1,
-                "Test Photo",
-                "https://via.placeholder.com/600/92c952",
-                "https://via.placeholder.com/150/92c952"
-        )
-        /** assert successful photo creation */
-        PhotoAssertions.assertPhotoSuccessfulCreation(
-                photoResponse,
-                albumId,
-                "Test Photo",
-                "https://via.placeholder.com/600/92c952",
-                "https://via.placeholder.com/150/92c952"
-        )
+        /** create a user and return its ID */
+        int userId = userClient.createUserAndReturnId("test User", "test_user", "testuser@example.com")
+        /** create a post by using the userId's reference and return its ID */
+        int postId = postClient.createPostAndReturnId(userId, "test post title", "this is the body of the test post.")
+        /** create a comment by using the postId's reference */
+        commentClient.createPostCommentAndAssertSuccess(postId, "a guy who comments", "commenter@example.com", "this is a test comment.")
+        /** create a to-do by using the userId's reference */
+        toDoClient.createUserToDoAndAssertSuccess(userId, "test to-do title", false)
+        /** create an album by using the userId's reference and return its ID */
+        int albumId = albumClient.createAlbumAndReturnId(userId, "test album title")
+        /** create a photo by using the albumId's reference */
+        photoClient.createAlbumPhotoAndAssertSuccess(albumId, "test photo title", "https://via.placeholder.com/600/92c952", "https://via.placeholder.com/150/92c952")
     }
 
     @Test
     void test_validateUserCreationIntegrity() {
         /** initialize variable to randomly returns a test scenario */
         Random random = new Random()
-        int scenario = random.nextInt(3) + 1
+        int testScenario = random.nextInt(3) + 1
 
         /** initialize a list to store the user data (simulated local DB) */
         List<Map<String, Object>> users = new ArrayList<>()
 
         /** simulate scenarios based on the randomly generated number */
-        switch (scenario) {
+        switch (testScenario) {
             case 1:
-                /** correct persistence scenario */
-
-                /** create a test data for scenario 1 */
+                /** correct persistence */
+                /** create a test data object */
                 Map<String, Object> correctlyPersistedUserTestData = [
                         name    : "correctly persisted user",
                         username: "correctly_persisted_user",
                         email   : "correctlyPersisted@example.com"
                 ]
-
-                /** create a user and assert its successful creation */
-                Response userResponse = userClient.createUser(
-                        (String)correctlyPersistedUserTestData.name,
-                        (String)correctlyPersistedUserTestData.username,
-                        (String)correctlyPersistedUserTestData.email
+                /** create a user using the test data */
+                userClient.createUserAndAssertSuccess(
+                        (String) correctlyPersistedUserTestData.name,
+                        (String) correctlyPersistedUserTestData.username,
+                        (String) correctlyPersistedUserTestData.email
                 )
-                UserAssertions.assertUserSuccessfulCreation(
-                        userResponse,
-                        (String)correctlyPersistedUserTestData.name,
-                        (String)correctlyPersistedUserTestData.username,
-                        (String)correctlyPersistedUserTestData.email
-                )
-
                 /** add the user to the local list (simulated local DB) */
                 Map<String, Object> user = [
-                        name    : (String)correctlyPersistedUserTestData.name,
-                        username: (String)correctlyPersistedUserTestData.username,
-                        email   : (String)correctlyPersistedUserTestData.email
+                        name    : (String) correctlyPersistedUserTestData.name,
+                        username: (String) correctlyPersistedUserTestData.username,
+                        email   : (String) correctlyPersistedUserTestData.email
                 ]
+
                 users.add(user)
 
-                /** assert that the user is in the list (simulated local DB) */
+                /** assert that the user is present within the list (simulated local DB) */
                 assert users.size() == 1
-                assert users.get(0).name == (String)correctlyPersistedUserTestData.name
-                assert users.get(0).username == (String)correctlyPersistedUserTestData.username
-                assert users.get(0).email == (String)correctlyPersistedUserTestData.email
+                assert users.get(0).name == (String) correctlyPersistedUserTestData.name
+                assert users.get(0).username == (String) correctlyPersistedUserTestData.username
+                assert users.get(0).email == (String) correctlyPersistedUserTestData.email
 
                 println "Scenario 1: Correct persistence"
 
                 break
 
             case 2:
-                /** failed persistence scenario */
-
+                /** failed persistence */
                 /** create a test data */
                 Map<String, Object> notPersistedUserTestData = [
                         name    : "not persisted user",
                         username: "not_persisted_user",
                         email   : "notPersisted@example.com"
                 ]
-
-                /** create a user */
-                Response userResponse = userClient.createUser(
-                        (String)notPersistedUserTestData.name,
-                        (String)notPersistedUserTestData.username,
-                        (String)notPersistedUserTestData.email
+                /** create a user using the test data */
+                userClient.createUserAndAssertSuccess(
+                        (String) notPersistedUserTestData.name,
+                        (String) notPersistedUserTestData.username,
+                        (String) notPersistedUserTestData.email
                 )
-
-                /** simulate the API response being successful */
-                assert userResponse.statusCode() == 201
-                /** simulate the failure to persist within the local DB (do not add the user) */
+                /** simulate the failure to persist within the local DB (the user is not added due to some sporadic DB issue) */
                 boolean persistenceSuccess = false /** simulating a DB issue */
 
                 /** simulate checking if the user was added to the list (simulated local DB) */
@@ -216,63 +106,42 @@ class UserTests {
                 break
 
             case 3:
-                /** duplicated persistence scenario */
-
+                /** duplicated persistence */
                 /** create a test data */
                 Map<String, Object> duplicatedUserTestData = [
                         name    : "duplicated user",
                         username: "duplicated_user",
                         email   : "duplicated@example.com"
                 ]
-
-                /** create a user and assert its successful creation */
-                Response userResponse = userClient.createUser(
-                        (String)duplicatedUserTestData.name,
-                        (String)duplicatedUserTestData.username,
-                        (String)duplicatedUserTestData.email
+                /** create two users using the same test data */
+                userClient.createUserMultipleTimes(
+                        2,
+                        (String) duplicatedUserTestData.name,
+                        (String) duplicatedUserTestData.username,
+                        (String) duplicatedUserTestData.email
                 )
-                UserAssertions.assertUserSuccessfulCreation(
-                        userResponse,
-                        (String)duplicatedUserTestData.name,
-                        (String)duplicatedUserTestData.username,
-                        (String)duplicatedUserTestData.email
-                )
-
-                /** create a duplicated user and assert its successful creation */
-                Response duplicatedUserResponse = userClient.createUser(
-                        (String)duplicatedUserTestData.name,
-                        (String)duplicatedUserTestData.username,
-                        (String)duplicatedUserTestData.email
-                )
-                UserAssertions.assertUserSuccessfulCreation(
-                        duplicatedUserResponse,
-                        (String)duplicatedUserTestData.name,
-                        (String)duplicatedUserTestData.username,
-                        (String)duplicatedUserTestData.email
-                )
-
                 /** simulate adding both users to the local list (simulated local DB) */
                 List<Map<String, Object>> duplicatedUser = [
                         [
-                                name    : (String)duplicatedUserTestData.name,
-                                username: (String)duplicatedUserTestData.username,
-                                email   : (String)duplicatedUserTestData.email
+                                name    : (String) duplicatedUserTestData.name,
+                                username: (String) duplicatedUserTestData.username,
+                                email   : (String) duplicatedUserTestData.email
                         ],
                         [
-                                name    : (String)duplicatedUserTestData.name,
-                                username: (String)duplicatedUserTestData.username,
-                                email   : (String)duplicatedUserTestData.email
+                                name    : (String) duplicatedUserTestData.name,
+                                username: (String) duplicatedUserTestData.username,
+                                email   : (String) duplicatedUserTestData.email
                         ]
                 ]
+
                 users.addAll(duplicatedUser)
 
                 /** define the expected duplicated user object */
                 Map<String, Object> expectedDuplicatedUserData = [
-                        name    : (String)duplicatedUserTestData.name,
-                        username: (String)duplicatedUserTestData.username,
-                        email   : (String)duplicatedUserTestData.email
+                        name    : (String) duplicatedUserTestData.name,
+                        username: (String) duplicatedUserTestData.username,
+                        email   : (String) duplicatedUserTestData.email
                 ]
-
                 /** assert that both users are present in the list (simulated local DB) */
                 assert users.size() == 2
                 assert users.get(0) == expectedDuplicatedUserData
@@ -294,7 +163,6 @@ class UserTests {
 
         /** trigger the timer */
         long startTime = System.currentTimeMillis()
-
         /** loop to create 100 users and a to-do for each of them */
         for (int i = 0; i < 100; i++) {
             /** generate a unique userId for each user */
@@ -303,6 +171,7 @@ class UserTests {
             while (userIds.contains(userId)) {
                 userId++
             }
+
             userIds.add(userId)
 
             /** define a user test data object */
@@ -311,56 +180,40 @@ class UserTests {
                     username: "user$i",
                     email   : "user$i@example.com"
             ]
-
-            /** create the user and assert its creation */
-            Response userResponse = userClient.createUser(
-                    (String)userTestData.name,
-                    (String)userTestData.username,
-                    (String)userTestData.email
-            )
-            UserAssertions.assertUserSuccessfulCreation(
-                    userResponse,
-                    (String)userTestData.name,
-                    (String)userTestData.username,
-                    (String)userTestData.email
+            /** create a user */
+            userClient.createUserAndAssertSuccess(
+                    (String) userTestData.name,
+                    (String) userTestData.username,
+                    (String) userTestData.email
             )
             /** store the user data within its list reference */
             users.add([
                     id      : userId,
-                    name    : (String)userTestData.name,
-                    username: (String)userTestData.username,
-                    email   : (String)userTestData.email
+                    name    : (String) userTestData.name,
+                    username: (String) userTestData.username,
+                    email   : (String) userTestData.email
             ])
 
             /** define a to-do test data object */
             Map<String, Object> toDoTestData = [
-                    title: "To-Do for User $i",
+                    title      : "To-Do for User $i",
                     isCompleted: false
             ] as Map<String, Object>
-
-            /** create a to-do for each created user and assert its creation */
-            Response toDoResponse = toDoClient.createToDo(
+            /** create a to-do for each user */
+            toDoClient.createUserToDoAndAssertSuccess(
                     userId,
-                    (String)toDoTestData.title,
-                    (Boolean)toDoTestData.isCompleted
-            )
-            ToDoAssertions.assertToDoSuccessfulCreation(
-                    toDoResponse,
-                    userId,
-                    (String)toDoTestData.title,
-                    (Boolean)toDoTestData.isCompleted
+                    (String) toDoTestData.title,
+                    (Boolean) toDoTestData.isCompleted
             )
             /** store the to-do data within its list reference */
             toDos.add([
                     userId   : userId,
-                    title    : (String)toDoTestData.title,
-                    completed: (Boolean)toDoTestData.isCompleted
+                    title    : (String) toDoTestData.title,
+                    completed: (Boolean) toDoTestData.isCompleted
             ])
         }
-
         /** stop the timer */
         long endTime = System.currentTimeMillis()
-
         /** calculate the total time taken and print it in seconds */
         long totalTime = endTime - startTime
 

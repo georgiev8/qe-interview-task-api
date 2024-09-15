@@ -7,8 +7,13 @@ class CommentClient extends HTTPClient {
 
     TestDataBuilder testDataBuilder = new TestDataBuilder()
 
-    Response createComment(int postId, int id, String name, String email, String body) {
-        post(comments, testDataBuilder.comment(postId, id, name, email, body))
+    Response createComment(int postId, String name, String email, String body) {
+        post(comments, testDataBuilder.comment(postId, name, email, body))
+    }
+
+    void createPostCommentAndAssertSuccess(int postId, String name, String email, String body) {
+        Response postResponse = this.createComment(postId, name, email, body)
+        CommentAssertions.assertCommentSuccessfulCreation(postResponse, postId, name, email, body)
     }
 }
 

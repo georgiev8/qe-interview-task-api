@@ -37,10 +37,9 @@ class TestDataBuilder {
     }
 
     /** <--- photo data builder ---> */
-    static String photo(int albumId, int id, String title, String url, String thumbnailUrl) {
+    static String photo(int albumId, String title, String url, String thumbnailUrl) {
         return """{
             "albumId": $albumId,
-            "id": $id,
             "title": "$title",
             "url": "$url",
             "thumbnailUrl": "$thumbnailUrl"
@@ -48,19 +47,17 @@ class TestDataBuilder {
     }
 
     /** <--- album data builder ---> */
-    static String album(int userId, int id, String title) {
+    static String album(int userId, String title) {
         return """{
             "userId": $userId,
-            "id": $id,
             "title": "$title"
         }"""
     }
 
     /** <--- comment data builder ---> */
-    static String comment(int postId, int id, String name, String email, String body) {
+    static String comment(int postId, String name, String email, String body) {
         return """{
             "postId": $postId,
-            "id": $id,
             "name": "$name",
             "email": "$email",
             "body": "$body"
@@ -68,10 +65,9 @@ class TestDataBuilder {
     }
 
     /** <--- post data builder ---> */
-    static String post(int userId, int id, String title, String body) {
+    static String post(int userId, String title, String body) {
         return """{
             "userId": $userId,
-            "id": $id,
             "title": "$title",
             "body": "$body"
         }"""

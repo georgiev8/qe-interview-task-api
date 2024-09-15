@@ -7,8 +7,15 @@ class PostClient extends HTTPClient {
 
     TestDataBuilder testDataBuilder = new TestDataBuilder()
 
-    Response createPost(int userId, int id, String title, String body) {
-        post(posts, testDataBuilder.post(userId, id, title, body))
+    Response createPost(int userId, String title, String body) {
+        post(posts, testDataBuilder.post(userId, title, body))
+    }
+
+    int createPostAndReturnId(int userId, String title, String body) {
+        Response postResponse = this.createPost(userId, title, body)
+        PostAssertions.assertPostSuccessfulCreation(postResponse, userId, title, body)
+
+        return postResponse.jsonPath().getInt("id")
     }
 }
 

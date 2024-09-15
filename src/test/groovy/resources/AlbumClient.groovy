@@ -7,8 +7,15 @@ class AlbumClient extends HTTPClient {
 
     TestDataBuilder testDataBuilder = new TestDataBuilder()
 
-    Response createAlbum(int userId, int id, String title) {
-        post(albums, testDataBuilder.album(userId, id, title))
+    Response createAlbum(int userId, String title) {
+        post(albums, testDataBuilder.album(userId, title))
+    }
+
+    int createAlbumAndReturnId(int userId, String title) {
+        Response albumResponse = this.createAlbum(userId, title)
+        AlbumAssertions.assertAlbumSuccessfulCreation(albumResponse, userId, title)
+
+        return albumResponse.jsonPath().getInt("id")
     }
 }
 

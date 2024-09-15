@@ -7,8 +7,14 @@ class PhotoClient extends HTTPClient {
 
     TestDataBuilder testDataBuilder = new TestDataBuilder()
 
-    Response createPhoto(int albumId, int id, String title, String url, String thumbnailUrl) {
-        post(photos, testDataBuilder.photo(albumId, id, title, url, thumbnailUrl))
+    Response createPhoto(int albumId, String title, String url, String thumbnailUrl) {
+        post(photos, testDataBuilder.photo(albumId, title, url, thumbnailUrl))
+    }
+
+    void createAlbumPhotoAndAssertSuccess(int albumId, String title, String url, String thumbnailUrl) {
+        Response userResponse = this.createPhoto(albumId, title, url, thumbnailUrl)
+
+        PhotoAssertions.assertPhotoSuccessfulCreation(userResponse, albumId, title, url, thumbnailUrl)
     }
 }
 

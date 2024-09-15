@@ -10,6 +10,11 @@ class ToDoClient extends HTTPClient {
     Response createToDo(int userId, String title, boolean completed) {
         post(toDos, testDataBuilder.userToDo(userId, title, completed))
     }
+
+    void createUserToDoAndAssertSuccess(int userId, String title, boolean completed) {
+        Response userResponse = this.createToDo(userId, title, completed)
+        ToDoAssertions.assertToDoSuccessfulCreation(userResponse, userId, title, completed)
+    }
 }
 
 class ToDoAssertions {

@@ -10,6 +10,24 @@ class UserClient extends HTTPClient {
     Response createUser(String name, String username, String email) {
         post(users, testDataBuilder.user(name, username, email))
     }
+
+    void createUserAndAssertSuccess(String name, String username, String email) {
+        Response userResponse = this.createUser(name, username, email)
+        UserAssertions.assertUserSuccessfulCreation(userResponse, name, username, email)
+    }
+
+    void createUserMultipleTimes(int times, String name, String username, String email) {
+        for (int i = 0; i < times; i++) {
+            this.createUserAndAssertSuccess(name, username, email)
+        }
+    }
+
+    int createUserAndReturnId(String name, String username, String email) {
+        Response userResponse = this.createUser(name, username, email)
+        UserAssertions.assertUserSuccessfulCreation(userResponse, name, username, email)
+
+        return userResponse.jsonPath().getInt("id")
+    }
 }
 
 class UserAssertions {
