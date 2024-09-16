@@ -1,24 +1,37 @@
 package resources
 
+import utils.*
+import database.*
 import io.restassured.response.Response
 
-class PhotoClient extends HTTPClient {
-    final photos = '/photos'
-
+class PhotoClient extends HTTPClient implements Database<Map<String, Object>> {
+    final String photos = '/photos'
     TestDataBuilder testDataBuilder = new TestDataBuilder()
 
     Response createPhoto(int albumId, String title, String url, String thumbnailUrl) {
-        post(photos, testDataBuilder.photo(albumId, title, url, thumbnailUrl))
+        Response response = post(photos, testDataBuilder.photo(albumId, title, url, thumbnailUrl))
+        assertPhotoSuccessfulCreation(response, albumId, title, url, thumbnailUrl)
+        /** add the created photo to our embedded DB under the "photos" key
+         * getMap("") is used to convert the JSON response to a Map object
+         * */
+        addToMemory("photos", response.jsonPath().getMap(""))
+
+        return response
     }
 
-    void createAlbumPhotoAndAssertSuccess(int albumId, String title, String url, String thumbnailUrl) {
-        Response userResponse = this.createPhoto(albumId, title, url, thumbnailUrl)
+    void assertPhotoInMemory(int albumId, String title, String url, String thumbnailUrl) {
+        /** retrieve all photos from memory */
+        List<Map<String, Object>> photos = getFromMemory("photos")
 
-        PhotoAssertions.assertPhotoSuccessfulCreation(userResponse, albumId, title, url, thumbnailUrl)
+        /** assert that the photo is in the list of photos */
+        assert photos.find { it.get("albumId") == albumId && it.get("title") == title && it.get("url") == url && it.get("thumbnailUrl") == thumbnailUrl } != null
+
+        // "find" does the job faster
+        // photos.containsAll([
+        //      [albumId: albumId, title: title, url: url, thumbnailUrl: thumbnailUrl]
+        // ])
     }
-}
 
-class PhotoAssertions {
     static void assertPhotoSuccessfulCreation(Response response, int albumId, String title, String url, String thumbnailUrl) {
         assert response.statusCode() == 201
         assert response.jsonPath().getInt("albumId") == albumId

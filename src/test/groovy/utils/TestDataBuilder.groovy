@@ -1,7 +1,7 @@
-package resources
+package utils
 
 class TestDataBuilder {
-    /** <--- userToDo data builder ---> */
+    /** userToDo data builder */
     static String userToDo(int userId, String title, boolean completed) {
         return """{
             "userId": $userId,
@@ -10,7 +10,7 @@ class TestDataBuilder {
         }"""
     }
 
-    /** <--- user data builder ---> */
+    /** user data builder */
     static String user(String name, String userName, String email) {
         return """{
             "name": "$name",
@@ -36,7 +36,7 @@ class TestDataBuilder {
         }"""
     }
 
-    /** <--- photo data builder ---> */
+    /** photo data builder */
     static String photo(int albumId, String title, String url, String thumbnailUrl) {
         return """{
             "albumId": $albumId,
@@ -46,7 +46,7 @@ class TestDataBuilder {
         }"""
     }
 
-    /** <--- album data builder ---> */
+    /** album data builder */
     static String album(int userId, String title) {
         return """{
             "userId": $userId,
@@ -54,7 +54,7 @@ class TestDataBuilder {
         }"""
     }
 
-    /** <--- comment data builder ---> */
+    /** comment data builder */
     static String comment(int postId, String name, String email, String body) {
         return """{
             "postId": $postId,
@@ -64,7 +64,7 @@ class TestDataBuilder {
         }"""
     }
 
-    /** <--- post data builder ---> */
+    /** post data builder */
     static String post(int userId, String title, String body) {
         return """{
             "userId": $userId,
