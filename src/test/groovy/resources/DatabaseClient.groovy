@@ -3,7 +3,7 @@ package resources
 import database.*
 
 class DatabaseClient implements Database<Map<String, Object>> {
-    static void simulateMissingEntityInMemory(String resource, String key, String value) {
+    void simulateMissingEntityInMemory(String resource, String key, String value) {
         /** retrieve a resource from memory */
         List<Map<String, Object>> resources = getFromMemory(resource)
 
@@ -21,7 +21,7 @@ class DatabaseClient implements Database<Map<String, Object>> {
         assert buggyResources == resources
     }
 
-    static void simulateDuplicateEntityInMemory(String resource, String key, String value) {
+    void simulateDuplicateEntityInMemory(String resource, String key, String value) {
         /** retrieve a resource from memory */
         List<Map<String, Object>> resources = getFromMemory(resource)
 

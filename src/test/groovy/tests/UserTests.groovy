@@ -12,42 +12,7 @@ class UserTests implements Database<Map<String, Object>> {
     AlbumClient albumClient = new AlbumClient()
     PhotoClient photoClient = new PhotoClient()
     CommentClient commentClient = new CommentClient()
-
-    void simulateMissingEntityInMemory(String resource, String key, String value) {
-        /** retrieve a resource from memory */
-        List<Map<String, Object>> resources = getFromMemory(resource)
-
-        /** simulate that entity is not persisted in the DB */
-        resources.each { resourceMap ->
-            if (resourceMap.get(key) == value) {
-                /** "id" becomes NULL due to some bug. All resources have IDs so that's the best key for the job */
-                resourceMap.put("id", null)
-            }
-        }
-
-        /** retrieve the buggy resource from db and catch the bug */
-        List<Map<String, Object>> buggyResources = getFromMemory(resource)
-
-        assert buggyResources == resources
-    }
-
-    void simulateDuplicateEntityInMemory(String resource, String key, String value) {
-        /** retrieve a resource from memory */
-        List<Map<String, Object>> resources = getFromMemory(resource)
-
-        /** simulate that entity is duplicated in the DB */
-        resources.each { resourceMap ->
-            if (resourceMap.get(key) == value) {
-                /** "id" gets duplicated due to some bug. All resources have IDs so that's the best key for the job */
-                resourceMap.put("id", resourceMap.get("id").toString().concat(" ").concat(resourceMap.get("id").toString()))
-            }
-        }
-
-        /** retrieve the buggy resource from db and catch the bug */
-        List<Map<String, Object>> buggyResources = getFromMemory(resource)
-
-        assert buggyResources == resources
-    }
+    DatabaseClient databaseClient = new DatabaseClient()
 
     @Test
     void test_createUser_andItsRelatedResources() {
@@ -140,7 +105,7 @@ class UserTests implements Database<Map<String, Object>> {
         )
         int userId = userResponse.jsonPath().getInt("id")
 
-        simulateMissingEntityInMemory(
+        databaseClient.simulateMissingEntityInMemory(
                 "users",
                 "username",
                 "test_user"
@@ -153,7 +118,7 @@ class UserTests implements Database<Map<String, Object>> {
         )
         int postId = postResponse.jsonPath().getInt("id")
 
-        simulateMissingEntityInMemory(
+        databaseClient.simulateMissingEntityInMemory(
                 "posts",
                 "title",
                 "test post title"
@@ -166,7 +131,7 @@ class UserTests implements Database<Map<String, Object>> {
                 "this is a test comment"
         )
 
-        simulateMissingEntityInMemory(
+        databaseClient.simulateMissingEntityInMemory(
                 "comments",
                 "email",
                 "commenter@example.com"
@@ -178,7 +143,7 @@ class UserTests implements Database<Map<String, Object>> {
                 false
         )
 
-        simulateMissingEntityInMemory(
+        databaseClient.simulateMissingEntityInMemory(
                 "todos",
                 "title",
                 "test to-do title"
@@ -190,7 +155,7 @@ class UserTests implements Database<Map<String, Object>> {
         )
         int albumId = albumResponse.jsonPath().getInt("id")
 
-        simulateMissingEntityInMemory(
+        databaseClient.simulateMissingEntityInMemory(
                 "albums",
                 "title",
                 "test album title"
@@ -203,7 +168,7 @@ class UserTests implements Database<Map<String, Object>> {
                 "https://via.placeholder.com/150/92c952"
         )
 
-        simulateMissingEntityInMemory(
+        databaseClient.simulateMissingEntityInMemory(
                 "photos",
                 "title",
                 "test photo title"
@@ -219,7 +184,7 @@ class UserTests implements Database<Map<String, Object>> {
         )
         int userId = userResponse.jsonPath().getInt("id")
 
-        simulateDuplicateEntityInMemory(
+        databaseClient.simulateDuplicateEntityInMemory(
                 "users",
                 "username",
                 "test_user"
@@ -232,7 +197,7 @@ class UserTests implements Database<Map<String, Object>> {
         )
         int postId = postResponse.jsonPath().getInt("id")
 
-        simulateDuplicateEntityInMemory(
+        databaseClient.simulateDuplicateEntityInMemory(
                 "posts",
                 "title",
                 "test post title"
@@ -245,7 +210,7 @@ class UserTests implements Database<Map<String, Object>> {
                 "this is a test comment"
         )
 
-        simulateDuplicateEntityInMemory(
+        databaseClient.simulateDuplicateEntityInMemory(
                 "comments",
                 "email",
                 "commenter@example.com"
@@ -257,7 +222,7 @@ class UserTests implements Database<Map<String, Object>> {
                 false
         )
 
-        simulateDuplicateEntityInMemory(
+        databaseClient.simulateDuplicateEntityInMemory(
                 "todos",
                 "title",
                 "test to-do title"
@@ -269,7 +234,7 @@ class UserTests implements Database<Map<String, Object>> {
         )
         int albumId = albumResponse.jsonPath().getInt("id")
 
-        simulateDuplicateEntityInMemory(
+        databaseClient.simulateDuplicateEntityInMemory(
                 "albums",
                 "title",
                 "test album title"
@@ -282,7 +247,7 @@ class UserTests implements Database<Map<String, Object>> {
                 "https://via.placeholder.com/150/92c952"
         )
 
-        simulateDuplicateEntityInMemory(
+        databaseClient.simulateDuplicateEntityInMemory(
                 "photos",
                 "title",
                 "test photo title"
