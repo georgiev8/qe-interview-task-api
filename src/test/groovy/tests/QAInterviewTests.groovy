@@ -5,7 +5,7 @@ import resources.*
 import org.junit.jupiter.api.Test
 import io.restassured.response.Response
 
-class UserTests implements Database<Map<String, Object>> {
+class QAInterviewTests implements Database<Map<String, Object>> {
     UserClient userClient = new UserClient()
     ToDoClient toDoClient = new ToDoClient()
     PostClient postClient = new PostClient()
