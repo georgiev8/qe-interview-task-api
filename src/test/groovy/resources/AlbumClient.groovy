@@ -6,6 +6,7 @@ import io.restassured.response.Response
 
 class AlbumClient extends HTTPClient implements Database<Map<String, Object>> {
     final String albums = '/albums'
+
     TestDataBuilder testDataBuilder = new TestDataBuilder()
 
     Response createAlbum(int userId, String title) {
@@ -14,16 +15,19 @@ class AlbumClient extends HTTPClient implements Database<Map<String, Object>> {
         /** add the created album to our embedded DB under the "albums" key
          * getMap("") is used to convert the JSON response to a Map object
          * */
-        addToMemory("albums", response.jsonPath().getMap(""))
+        addToDB("albums", response.jsonPath().getMap(""))
+
         return response
     }
 
     void assertAlbumInMemory(int userId, String title) {
         /** retrieve all albums from memory */
-        List<Map<String, Object>> albums = getFromMemory("albums")
+        List<Map<String, Object>> albums = getFromDB("albums")
 
         /** assert that the album is in the list of albums */
-        assert albums.find { it.get("userId") == userId && it.get("title") == title } != null
+        assert albums.find {
+            it.get("userId") == userId && it.get("title") == title
+        } != null
 
         // "find" does the job faster
         // albums.containsAll([

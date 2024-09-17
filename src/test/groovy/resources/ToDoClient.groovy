@@ -15,17 +15,19 @@ class ToDoClient extends HTTPClient implements Database<Map<String, Object>> {
         /** add the created to-do to our embedded DB under the "todos" key
          * getMap("") is used to convert the JSON response to a Map object
          * */
-        addToMemory("todos", response.jsonPath().getMap(""))
+        addToDB("todos", response.jsonPath().getMap(""))
 
         return response
     }
 
     void assertToDoInMemory(int userId, String title, boolean completed) {
         /** retrieve all todos from memory */
-        List<Map<String, Object>> todos = getFromMemory("todos")
+        List<Map<String, Object>> todos = getFromDB("todos")
 
         /** assert that the to-do is in the list of todos */
-        assert todos.find { it.get("userId") == userId && it.get("title") == title && it.get("completed") == completed } != null
+        assert todos.find {
+            it.get("userId") == userId && it.get("title") == title && it.get("completed") == completed
+        } != null
 
         // "find" does the job faster
         // todos.containsAll([

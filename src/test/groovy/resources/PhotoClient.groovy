@@ -6,6 +6,7 @@ import io.restassured.response.Response
 
 class PhotoClient extends HTTPClient implements Database<Map<String, Object>> {
     final String photos = '/photos'
+
     TestDataBuilder testDataBuilder = new TestDataBuilder()
 
     Response createPhoto(int albumId, String title, String url, String thumbnailUrl) {
@@ -14,17 +15,19 @@ class PhotoClient extends HTTPClient implements Database<Map<String, Object>> {
         /** add the created photo to our embedded DB under the "photos" key
          * getMap("") is used to convert the JSON response to a Map object
          * */
-        addToMemory("photos", response.jsonPath().getMap(""))
+        addToDB("photos", response.jsonPath().getMap(""))
 
         return response
     }
 
     void assertPhotoInMemory(int albumId, String title, String url, String thumbnailUrl) {
         /** retrieve all photos from memory */
-        List<Map<String, Object>> photos = getFromMemory("photos")
+        List<Map<String, Object>> photos = getFromDB("photos")
 
         /** assert that the photo is in the list of photos */
-        assert photos.find { it.get("albumId") == albumId && it.get("title") == title && it.get("url") == url && it.get("thumbnailUrl") == thumbnailUrl } != null
+        assert photos.find {
+            it.get("albumId") == albumId && it.get("title") == title && it.get("url") == url && it.get("thumbnailUrl") == thumbnailUrl
+        } != null
 
         // "find" does the job faster
         // photos.containsAll([

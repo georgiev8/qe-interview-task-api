@@ -105,7 +105,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
         )
         int userId = userResponse.jsonPath().getInt("id")
 
-        databaseClient.simulateMissingEntityInMemory(
+        databaseClient.simulateMissingEntityInDB(
                 "users",
                 "username",
                 "test_user"
@@ -118,7 +118,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
         )
         int postId = postResponse.jsonPath().getInt("id")
 
-        databaseClient.simulateMissingEntityInMemory(
+        databaseClient.simulateMissingEntityInDB(
                 "posts",
                 "title",
                 "test post title"
@@ -131,7 +131,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
                 "this is a test comment"
         )
 
-        databaseClient.simulateMissingEntityInMemory(
+        databaseClient.simulateMissingEntityInDB(
                 "comments",
                 "email",
                 "commenter@example.com"
@@ -143,7 +143,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
                 false
         )
 
-        databaseClient.simulateMissingEntityInMemory(
+        databaseClient.simulateMissingEntityInDB(
                 "todos",
                 "title",
                 "test to-do title"
@@ -155,7 +155,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
         )
         int albumId = albumResponse.jsonPath().getInt("id")
 
-        databaseClient.simulateMissingEntityInMemory(
+        databaseClient.simulateMissingEntityInDB(
                 "albums",
                 "title",
                 "test album title"
@@ -168,7 +168,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
                 "https://via.placeholder.com/150/92c952"
         )
 
-        databaseClient.simulateMissingEntityInMemory(
+        databaseClient.simulateMissingEntityInDB(
                 "photos",
                 "title",
                 "test photo title"
@@ -184,7 +184,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
         )
         int userId = userResponse.jsonPath().getInt("id")
 
-        databaseClient.simulateDuplicateEntityInMemory(
+        databaseClient.simulateDuplicatedEntityInDB(
                 "users",
                 "username",
                 "test_user"
@@ -197,7 +197,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
         )
         int postId = postResponse.jsonPath().getInt("id")
 
-        databaseClient.simulateDuplicateEntityInMemory(
+        databaseClient.simulateDuplicatedEntityInDB(
                 "posts",
                 "title",
                 "test post title"
@@ -210,7 +210,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
                 "this is a test comment"
         )
 
-        databaseClient.simulateDuplicateEntityInMemory(
+        databaseClient.simulateDuplicatedEntityInDB(
                 "comments",
                 "email",
                 "commenter@example.com"
@@ -222,7 +222,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
                 false
         )
 
-        databaseClient.simulateDuplicateEntityInMemory(
+        databaseClient.simulateDuplicatedEntityInDB(
                 "todos",
                 "title",
                 "test to-do title"
@@ -234,7 +234,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
         )
         int albumId = albumResponse.jsonPath().getInt("id")
 
-        databaseClient.simulateDuplicateEntityInMemory(
+        databaseClient.simulateDuplicatedEntityInDB(
                 "albums",
                 "title",
                 "test album title"
@@ -247,7 +247,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
                 "https://via.placeholder.com/150/92c952"
         )
 
-        databaseClient.simulateDuplicateEntityInMemory(
+        databaseClient.simulateDuplicatedEntityInDB(
                 "photos",
                 "title",
                 "test photo title"

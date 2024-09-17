@@ -15,17 +15,19 @@ class PostClient extends HTTPClient implements Database<Map<String, Object>> {
         /** add the created post to our embedded DB under the "posts" key
          * getMap("") is used to convert the JSON response to a Map object
          * */
-        addToMemory("posts", response.jsonPath().getMap(""))
+        addToDB("posts", response.jsonPath().getMap(""))
 
         return response
     }
 
     void assertPostInMemory(int userId, String title, String body) {
         /** retrieve all posts from memory */
-        List<Map<String, Object>> posts = getFromMemory("posts")
+        List<Map<String, Object>> posts = getFromDB("posts")
 
         /** assert that the post is in the list of posts */
-        assert posts.find { it.get("userId") == userId && it.get("title") == title && it.get("body") == body } != null
+        assert posts.find {
+            it.get("userId") == userId && it.get("title") == title && it.get("body") == body
+        } != null
 
         // "find" does the job faster
         // posts.containsAll([

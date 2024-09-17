@@ -15,17 +15,19 @@ class UserClient extends HTTPClient implements Database<Map<String, Object>> {
         /** add the created user to our embedded DB under the "users" key
          * getMap("") is used to convert the JSON response to a Map object
          * */
-        addToMemory("users", response.jsonPath().getMap(""))
+        addToDB("users", response.jsonPath().getMap(""))
 
         return response
     }
 
     void assertUserInMemory(String name, String username, String email) {
         /** retrieve all users from memory */
-        List<Map<String, Object>> users = getFromMemory("users")
+        List<Map<String, Object>> users = getFromDB("users")
 
         /** assert that the user is in the list of users */
-        assert users.find { it.get("name") == name && it.get("username") == username && it.get("email") == email } != null
+        assert users.find {
+            it.get("name") == name && it.get("username") == username && it.get("email") == email
+        } != null
 
         // "find" does the job faster
         // users.containsAll([

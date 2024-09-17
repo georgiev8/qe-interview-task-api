@@ -3,9 +3,9 @@ package resources
 import database.*
 
 class DatabaseClient implements Database<Map<String, Object>> {
-    void simulateMissingEntityInMemory(String resource, String key, String value) {
+    void simulateMissingEntityInDB(String resource, String key, String value) {
         /** retrieve a resource from memory */
-        List<Map<String, Object>> resources = getFromMemory(resource)
+        List<Map<String, Object>> resources = getFromDB(resource)
 
         /** simulate that entity is not persisted in the DB */
         resources.each { resourceMap ->
@@ -16,14 +16,14 @@ class DatabaseClient implements Database<Map<String, Object>> {
         }
 
         /** retrieve the buggy resource from db and catch the bug */
-        List<Map<String, Object>> buggyResources = getFromMemory(resource)
+        List<Map<String, Object>> buggyResources = getFromDB(resource)
 
         assert buggyResources == resources
     }
 
-    void simulateDuplicateEntityInMemory(String resource, String key, String value) {
+    void simulateDuplicatedEntityInDB(String resource, String key, String value) {
         /** retrieve a resource from memory */
-        List<Map<String, Object>> resources = getFromMemory(resource)
+        List<Map<String, Object>> resources = getFromDB(resource)
 
         /** simulate that entity is duplicated in the DB */
         resources.each { resourceMap ->
@@ -34,7 +34,7 @@ class DatabaseClient implements Database<Map<String, Object>> {
         }
 
         /** retrieve the buggy resource from db and catch the bug */
-        List<Map<String, Object>> buggyResources = getFromMemory(resource)
+        List<Map<String, Object>> buggyResources = getFromDB(resource)
 
         assert buggyResources == resources
     }
