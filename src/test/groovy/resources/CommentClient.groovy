@@ -20,8 +20,8 @@ class CommentClient extends HTTPClient implements Database<Map<String, Object>> 
         return response
     }
 
-    void assertCommentInMemory(int postId, String name, String email, String body) {
-        /** retrieve all comments from memory */
+    void assertCommentPresenceInDB(int postId, String name, String email, String body) {
+        /** retrieve all comments from DB */
         List<Map<String, Object>> comments = getFromDB("comments")
 
         /** assert that the comment is in the list of comments */

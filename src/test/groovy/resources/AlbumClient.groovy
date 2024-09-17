@@ -20,8 +20,8 @@ class AlbumClient extends HTTPClient implements Database<Map<String, Object>> {
         return response
     }
 
-    void assertAlbumInMemory(int userId, String title) {
-        /** retrieve all albums from memory */
+    void assertAlbumPresenceInDB(int userId, String title) {
+        /** retrieve all albums from DB */
         List<Map<String, Object>> albums = getFromDB("albums")
 
         /** assert that the album is in the list of albums */

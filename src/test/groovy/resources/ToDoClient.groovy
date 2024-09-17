@@ -20,8 +20,8 @@ class ToDoClient extends HTTPClient implements Database<Map<String, Object>> {
         return response
     }
 
-    void assertToDoInMemory(int userId, String title, boolean completed) {
-        /** retrieve all todos from memory */
+    void assertToDoPresenceInDB(int userId, String title, boolean completed) {
+        /** retrieve all todos from DB */
         List<Map<String, Object>> todos = getFromDB("todos")
 
         /** assert that the to-do is in the list of todos */

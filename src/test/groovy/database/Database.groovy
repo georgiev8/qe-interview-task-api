@@ -5,7 +5,7 @@ package database
  * */
 interface Database<T> {
     /**
-     * HashMap memory (key-value pairs), storing different types of resources (users, todos, etc...)
+     * HashMap database (key-value pairs), storing different types of resources (users, todos, etc...)
      * the key should be a string ("users", "todos", etc...) and the value should be a list of objects of type T
      * T represents a generic type, which means it can store different types of data (user data, post data, etc...)
      * */
@@ -21,7 +21,7 @@ interface Database<T> {
      * the "key" is the resource type (like "users"), and "value" is the actual resource object
      * */
     default void addToDB(String key, T value) {
-        /** if the key doesn't exist in the memory map, initialize an empty ArrayList for it */
+        /** if the key doesn't exist in the database map, initialize an empty ArrayList for it */
         if (!database.containsKey(key)) {
             database.put(key, new ArrayList<>())
         }

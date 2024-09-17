@@ -23,7 +23,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
         )
         /** store the "userId" for the related resources */
         int userId = userResponse.jsonPath().getInt("id")
-        userClient.assertUserInMemory(
+        userClient.assertUserPresenceInDB(
                 "test user",
                 "test_user",
                 "testuser@example.com"
@@ -37,7 +37,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
         )
         /** store the "postId" for the related resources */
         int postId = postResponse.jsonPath().getInt("id")
-        postClient.assertPostInMemory(
+        postClient.assertPostPresenceInDB(
                 userId,
                 "test post title",
                 "this is the body of the test post"
@@ -50,7 +50,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
                 "commenter@example.com",
                 "this is a test comment"
         )
-        commentClient.assertCommentInMemory(
+        commentClient.assertCommentPresenceInDB(
                 postId,
                 "someone who comments",
                 "commenter@example.com",
@@ -63,7 +63,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
                 "test to-do title",
                 false
         )
-        toDoClient.assertToDoInMemory(
+        toDoClient.assertToDoPresenceInDB(
                 userId,
                 "test to-do title",
                 false
@@ -76,7 +76,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
         )
         /** store the "albumId" for the related resources */
         int albumId = albumResponse.jsonPath().getInt("id")
-        albumClient.assertAlbumInMemory(
+        albumClient.assertAlbumPresenceInDB(
                 userId,
                 "test album title"
         )
@@ -88,7 +88,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
                 "https://via.placeholder.com/600/92c952",
                 "https://via.placeholder.com/150/92c952"
         )
-        photoClient.assertPhotoInMemory(
+        photoClient.assertPhotoPresenceInDB(
                 albumId,
                 "test photo title",
                 "https://via.placeholder.com/600/92c952",
@@ -263,7 +263,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
             /**
              * in a perfect production scenario,
              * each creation of a user should return a unique "userId" in our DB
-             * for the sake of this test, we will simulate the uniqueness within our memory using a HashSet
+             * for the sake of this test, we will simulate the uniqueness within our DB, using a HashSet
              * */
             int userId = i
 
@@ -283,7 +283,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
                     (String) userTestData.username,
                     (String) userTestData.email
             )
-            userClient.assertUserInMemory(
+            userClient.assertUserPresenceInDB(
                     (String) userTestData.name,
                     (String) userTestData.username,
                     (String) userTestData.email
@@ -301,7 +301,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
                     (String) toDoTestData.title,
                     (Boolean) toDoTestData.isCompleted
             )
-            toDoClient.assertToDoInMemory(
+            toDoClient.assertToDoPresenceInDB(
                     userId,
                     (String) toDoTestData.title,
                     (Boolean) toDoTestData.isCompleted

@@ -20,8 +20,8 @@ class UserClient extends HTTPClient implements Database<Map<String, Object>> {
         return response
     }
 
-    void assertUserInMemory(String name, String username, String email) {
-        /** retrieve all users from memory */
+    void assertUserPresenceInDB(String name, String username, String email) {
+        /** retrieve all users from DB */
         List<Map<String, Object>> users = getFromDB("users")
 
         /** assert that the user is in the list of users */

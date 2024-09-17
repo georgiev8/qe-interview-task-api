@@ -20,8 +20,8 @@ class PostClient extends HTTPClient implements Database<Map<String, Object>> {
         return response
     }
 
-    void assertPostInMemory(int userId, String title, String body) {
-        /** retrieve all posts from memory */
+    void assertPostPresenceInDB(int userId, String title, String body) {
+        /** retrieve all posts from DB */
         List<Map<String, Object>> posts = getFromDB("posts")
 
         /** assert that the post is in the list of posts */

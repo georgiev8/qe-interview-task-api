@@ -20,8 +20,8 @@ class PhotoClient extends HTTPClient implements Database<Map<String, Object>> {
         return response
     }
 
-    void assertPhotoInMemory(int albumId, String title, String url, String thumbnailUrl) {
-        /** retrieve all photos from memory */
+    void assertPhotoPresenceInDB(int albumId, String title, String url, String thumbnailUrl) {
+        /** retrieve all photos from DB */
         List<Map<String, Object>> photos = getFromDB("photos")
 
         /** assert that the photo is in the list of photos */

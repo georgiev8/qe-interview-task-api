@@ -4,7 +4,7 @@ import database.*
 
 class DatabaseClient implements Database<Map<String, Object>> {
     void simulateMissingEntityInDB(String resource, String key, String value) {
-        /** retrieve a resource from memory */
+        /** retrieve a resource from DB */
         List<Map<String, Object>> resources = getFromDB(resource)
 
         /** simulate that entity is not persisted in the DB */
@@ -22,7 +22,7 @@ class DatabaseClient implements Database<Map<String, Object>> {
     }
 
     void simulateDuplicatedEntityInDB(String resource, String key, String value) {
-        /** retrieve a resource from memory */
+        /** retrieve a resource from DB */
         List<Map<String, Object>> resources = getFromDB(resource)
 
         /** simulate that entity is duplicated in the DB */
