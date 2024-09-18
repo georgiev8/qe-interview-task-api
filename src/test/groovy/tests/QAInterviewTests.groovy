@@ -256,14 +256,15 @@ class QAInterviewTests implements Database<Map<String, Object>> {
 
     @Test
     void test_create100UsersAndToDos_validatingThePerformance() {
-        /** trigger the timer */
+        /** get the current time in milliseconds */
         long startTime = System.currentTimeMillis()
 
         for (int i = 0; i < 100; i++) {
             /**
              * in a perfect production scenario,
-             * each creation of a user should return a unique "userId" in our DB
-             * for the sake of this test, we will simulate the uniqueness within our DB, using a HashSet
+             * each user creation should return a unique "userId" in our DB
+             * for the sake of this test, we will simulate the uniqueness within our DB,
+             * using our "userIds" HashSet
              * */
             int userId = i
 
@@ -308,7 +309,7 @@ class QAInterviewTests implements Database<Map<String, Object>> {
             )
         }
 
-        /** kill the timer */
+        /** get the current time in milliseconds again */
         long endTime = System.currentTimeMillis()
 
         /** calculate the total time taken and print it in seconds */
