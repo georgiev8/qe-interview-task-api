@@ -1,6 +1,12 @@
-**Instructions**
+**Test runner**
 
-Fork this repository and work on the forked repo. When you have completed the task push the changes to your fork and share it with us.
+To run the tests, you can use the following command:
+
+```bash
+./gradlew test
+```
+
+**Task requirements**
 
 Using the resources in https://jsonplaceholder.typicode.com/ you will need to:
 
