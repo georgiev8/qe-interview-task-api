@@ -7,10 +7,8 @@ import io.restassured.response.Response
 class PostClient extends HTTPClient implements Database<Map<String, Object>> {
     final String posts = '/posts'
 
-    TestDataBuilder testDataBuilder = new TestDataBuilder()
-
     Response createPost(int userId, String title, String body) {
-        Response response = post(posts, testDataBuilder.post(userId, title, body))
+        Response response = post(posts, TestDataBuilder.buildPost(userId, title, body))
         assertPostSuccessfulCreation(response, userId, title, body)
         /** add the created post to our embedded DB under the "posts" key
          * getMap("") is used to convert the JSON response to a Map object

@@ -7,10 +7,8 @@ import io.restassured.response.Response
 class AlbumClient extends HTTPClient implements Database<Map<String, Object>> {
     final String albums = '/albums'
 
-    TestDataBuilder testDataBuilder = new TestDataBuilder()
-
     Response createAlbum(int userId, String title) {
-        Response response = post(albums, testDataBuilder.album(userId, title))
+        Response response = post(albums, TestDataBuilder.buildAlbum(userId, title))
         assertAlbumSuccessfulCreation(response, userId, title)
         /** add the created album to our embedded DB under the "albums" key
          * getMap("") is used to convert the JSON response to a Map object

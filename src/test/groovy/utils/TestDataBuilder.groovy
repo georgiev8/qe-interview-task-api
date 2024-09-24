@@ -2,7 +2,7 @@ package utils
 
 class TestDataBuilder {
     /** userToDo data builder */
-    static String userToDo(int userId, String title, boolean completed) {
+    static String buildUserToDo(int userId, String title, boolean completed) {
         return """{
             "userId": $userId,
             "title": "$title",
@@ -11,7 +11,7 @@ class TestDataBuilder {
     }
 
     /** user data builder */
-    static String user(String name, String userName, String email) {
+    static String buildUser(String name, String userName, String email) {
         return """{
             "name": "$name",
             "username": "$userName",
@@ -37,7 +37,7 @@ class TestDataBuilder {
     }
 
     /** photo data builder */
-    static String photo(int albumId, String title, String url, String thumbnailUrl) {
+    static String buildPhoto(int albumId, String title, String url, String thumbnailUrl) {
         return """{
             "albumId": $albumId,
             "title": "$title",
@@ -47,7 +47,7 @@ class TestDataBuilder {
     }
 
     /** album data builder */
-    static String album(int userId, String title) {
+    static String buildAlbum(int userId, String title) {
         return """{
             "userId": $userId,
             "title": "$title"
@@ -55,7 +55,7 @@ class TestDataBuilder {
     }
 
     /** comment data builder */
-    static String comment(int postId, String name, String email, String body) {
+    static String buildComment(int postId, String name, String email, String body) {
         return """{
             "postId": $postId,
             "name": "$name",
@@ -65,7 +65,7 @@ class TestDataBuilder {
     }
 
     /** post data builder */
-    static String post(int userId, String title, String body) {
+    static String buildPost(int userId, String title, String body) {
         return """{
             "userId": $userId,
             "title": "$title",

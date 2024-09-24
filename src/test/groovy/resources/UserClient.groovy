@@ -7,10 +7,8 @@ import io.restassured.response.Response
 class UserClient extends HTTPClient implements Database<Map<String, Object>> {
     final String users = '/users'
 
-    TestDataBuilder testDataBuilder = new TestDataBuilder()
-
     Response createUser(String name, String username, String email) {
-        Response response = post(users, testDataBuilder.user(name, username, email))
+        Response response = post(users, TestDataBuilder.buildUser(name, username, email))
         assertUserSuccessfulCreation(response, name, username, email)
         /** add the created user to our embedded DB under the "users" key
          * getMap("") is used to convert the JSON response to a Map object

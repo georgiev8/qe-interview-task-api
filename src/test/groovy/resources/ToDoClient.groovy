@@ -7,10 +7,8 @@ import io.restassured.response.Response
 class ToDoClient extends HTTPClient implements Database<Map<String, Object>> {
     final String todos = '/todos'
 
-    TestDataBuilder testDataBuilder = new TestDataBuilder()
-
     Response createToDo(int userId, String title, boolean completed) {
-        Response response = post(todos, testDataBuilder.userToDo(userId, title, completed))
+        Response response = post(todos, TestDataBuilder.buildUserToDo(userId, title, completed))
         assertToDoSuccessfulCreation(response, userId, title, completed)
         /** add the created to-do to our embedded DB under the "todos" key
          * getMap("") is used to convert the JSON response to a Map object

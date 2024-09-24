@@ -7,10 +7,8 @@ import io.restassured.response.Response
 class CommentClient extends HTTPClient implements Database<Map<String, Object>> {
     final String comments = '/comments'
 
-    TestDataBuilder testDataBuilder = new TestDataBuilder()
-
     Response createComment(int postId, String name, String email, String body) {
-        Response response = post(comments, testDataBuilder.comment(postId, name, email, body))
+        Response response = post(comments, TestDataBuilder.buildComment(postId, name, email, body))
         assertCommentSuccessfulCreation(response, postId, name, email, body)
         /** add the created comment to our embedded DB under the "comments" key
          * getMap("") is used to convert the JSON response to a Map object

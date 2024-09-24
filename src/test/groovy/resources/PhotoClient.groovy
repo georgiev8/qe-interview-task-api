@@ -7,10 +7,8 @@ import io.restassured.response.Response
 class PhotoClient extends HTTPClient implements Database<Map<String, Object>> {
     final String photos = '/photos'
 
-    TestDataBuilder testDataBuilder = new TestDataBuilder()
-
     Response createPhoto(int albumId, String title, String url, String thumbnailUrl) {
-        Response response = post(photos, testDataBuilder.photo(albumId, title, url, thumbnailUrl))
+        Response response = post(photos, TestDataBuilder.buildPhoto(albumId, title, url, thumbnailUrl))
         assertPhotoSuccessfulCreation(response, albumId, title, url, thumbnailUrl)
         /** add the created photo to our embedded DB under the "photos" key
          * getMap("") is used to convert the JSON response to a Map object
