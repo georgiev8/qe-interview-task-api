@@ -313,6 +313,6 @@ class QAInterviewTests implements Database<Map<String, Object>> {
         long endTime = System.currentTimeMillis()
 
         /** calculate the total time taken and print it in seconds */
-        println "Total time taken to create 100 users and 100 to-dos: ${endTime - startTime / 1000} seconds"
+        println "Total time taken to create 100 users and 100 to-dos: ${(endTime - startTime) / 1000} seconds"
     }
 }
